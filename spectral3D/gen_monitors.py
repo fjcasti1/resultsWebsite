@@ -292,7 +292,7 @@ if __name__=='__main__':
         Ro    = page[2]
         # Filter dataframe
         cond  = ( (fig_df['Gamma']==Gamma) & (fig_df['eta']==eta) & (fig_df['Ro']==Ro) )
-        filt_df = fig_df.iloc[fig_df.index[cond].to_list()]
+        filt_df = fig_df.iloc[fig_df.index[cond].tolist()]
         for i in range(filt_df.shape[0]):
             Bo   = filt_df.iloc[i]['Bo']
             Re   = filt_df.iloc[i]['Re']
