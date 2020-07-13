@@ -55,13 +55,13 @@ html_header(){
       <h1 class="grid_14">Time Series Monitors</h1>
       <nav class="grid_10">
         <ul>
-          <li><a href="#">Home</a></li>
+          <li><a href="https://mathpost.asu.edu/~kiko">Home</a></li>
           <li>
             <button class="dropbtn" id="MenuDropBtn"
               onclick="activateMenuDropdown(this)">Results
               <i class="fa fa-caret-down"></i>
           </li>
-          <li><a href="jobs.html">Jobs</a></li>
+          <li><a href="../jobs.html">Jobs</a></li>
         </ul>
       </nav>
     </header>
