@@ -1,7 +1,7 @@
 import fileinput, os
 
 # ssh agave 'mq' | tail -n +2 | python jobs.py
-OUTFILE = '/home/kiko/public_html/Website/research/jobs.html'
+OUTFILE = '/home/kiko/public_html/resultsWebsite/jobs.html'
 
 fields = ['jobID','partition','jobName','ST','t','tLim',
     'nodes','CPUcores','comment']
@@ -12,7 +12,7 @@ for line in fileinput.input():
   linedict = dict((fields[i],linelist[i]) for i in range(0,len(fields)))
   [ mydict[field].append(linedict[field]) for field in fields ]
   N += 1
-        
+
 Nrun = mydict['ST'].count('RUNNING')
 Npend = mydict['ST'].count('PENDING')
 
