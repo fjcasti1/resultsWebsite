@@ -101,7 +101,7 @@ def html_header(code):
               onclick="activateMenuDropdown(this)">Results
               <i class="fa fa-caret-down"></i>
           </li>
-          <li><a href="../jobs.html">Jobs</a></li>
+          <li><a href="../jobs.html" target="_blank">Jobs</a></li>
         </ul>
       </nav>
     </header>
