@@ -46,10 +46,15 @@ def get_fig_dataframe():
 
     figs = [f for f in listdir(figpath) if isfile(join(figpath, f))]
     df = pd.DataFrame(columns=columns)
+    df_float = pd.DataFrame(columns=columns)
 
+    # Get string dataFrame
     for fig in figs:
         fields = get_fields(fig)
-        Bo    = fields['Bo']
+        if fields['Bo']=='0e0':
+            Bo = 'Inf'
+        else:
+            Bo = fields['Bo']
         Re    = fields['Re']
         Ro    = fields['Ro']
         wf    = fields['wf']
@@ -61,10 +66,19 @@ def get_fig_dataframe():
         df = df.append({'Bo':Bo, 'Re':Re, 'Ro':Ro, 'wf':wf, 'Gamma':Gamma,
             'eta':eta, 'mode':mode, 'pert':pert}, ignore_index=True)
 
-    df = df.sort_values(by=order)
-    df.reset_index(drop=True, inplace=True)
-    return df
+    # Get floats dataFrame
+    for column in columns:
+        df_float[column] = pd.to_numeric(df[column],downcast='float')
 
+    # Sort floats dataFrame
+    df_float = df_float.sort_values(by=order,ascending=False)
+
+    # Sort string dataFram using floats dataFrame
+    aux = df
+    for i in range(df_float.index.shape[0]):
+        df.iloc[i] = aux.iloc[df_float.index[i]]
+
+    return df, df_float
 
 def html_head(pageInfo):
     Gamma= pageInfo[0]
@@ -261,18 +275,18 @@ Ro = {} | &omega;<sub>f</sub> = {} | mode = {} | pert = {}</b>'.format(Bo,
     return code
 
 if __name__=='__main__':
-    fig_df = get_fig_dataframe()
-    Nrows = fig_df.shape[0]
-    Gamma = fig_df.iloc[0]['Gamma']
-    eta   = fig_df.iloc[0]['eta']
-    Ro    = fig_df.iloc[0]['Ro']
-    fig_pages=[]
+    df = get_fig_dataframe()
+    Nrows = df.shape[0]
+    Gamma = df.iloc[0]['Gamma']
+    eta   = df.iloc[0]['eta']
+    Ro    = df.iloc[0]['Ro']
+    fig_pages = []
     fig_pages.append((Gamma,eta,Ro))
     for i in range(Nrows):
-        if fig_df.iloc[i]['Gamma'] != Gamma or fig_df.iloc[i]['eta'] != eta or fig_df.iloc[i]['Ro'] != Ro:
-            Gamma = fig_df.iloc[i]['Gamma']
-            eta   = fig_df.iloc[i]['eta']
-            Ro    = fig_df.iloc[i]['Ro']
+        if df.iloc[i]['Gamma'] != Gamma or df.iloc[i]['eta'] != eta or df.iloc[i]['Ro'] != Ro:
+            Gamma = df.iloc[i]['Gamma']
+            eta   = df.iloc[i]['eta']
+            Ro    = df.iloc[i]['Ro']
             fig_pages.append((Gamma,eta,Ro))
 
     mov_pages=[]
@@ -291,8 +305,8 @@ if __name__=='__main__':
         eta   = page[1]
         Ro    = page[2]
         # Filter dataframe
-        cond  = ( (fig_df['Gamma']==Gamma) & (fig_df['eta']==eta) & (fig_df['Ro']==Ro) )
-        filt_df = fig_df.iloc[fig_df.index[cond].tolist()]
+        cond  = ( (df['Gamma']==Gamma) & (df['eta']==eta) & (df['Ro']==Ro) )
+        filt_df = df.iloc[df.index[cond].tolist()]
         for i in range(filt_df.shape[0]):
             Bo   = filt_df.iloc[i]['Bo']
             Re   = filt_df.iloc[i]['Re']
