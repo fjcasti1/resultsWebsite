@@ -73,12 +73,12 @@ def get_fig_dataframe():
     # Sort floats dataFrame
     df_float = df_float.sort_values(by=order,ascending=False)
 
-    # Sort string dataFram using floats dataFrame
+    # Sort string dataFrame using floats dataFrame
     aux = df
-    for i in range(df_float.index.shape[0]):
-        df.iloc[i] = aux.iloc[df_float.index[i]]
+    df = aux.iloc[df_float.index[range(df_float.index.shape[0])]]
+    df.reset_index(drop=True,inplace=True)
 
-    return df, df_float
+    return df
 
 def html_head(pageInfo):
     Gamma= pageInfo[0]
@@ -106,7 +106,7 @@ def html_header(code):
 <body>
   <div class="wrap container_24">
     <header class="clearfix">
-      <h1 class="grid_14">Time Series Monitors</h1>
+      <h1 class="grid_14">Time Series - 3D Axisymmetric</h1>
       <nav class="grid_10">
         <ul>
           <li><a href="https://mathpost.asu.edu/~kiko">Home</a></li>
@@ -167,7 +167,7 @@ def html_sideNav0(code,filt_df):
         return str.strip('.png').split(token)[-1].split('_')[0]
 
     def writeDropdownBtn(Bo):
-        if float(Bo) == 0:
+        if Bo == 'Inf':
             Bo = '&infin;'
         code = """
       <button class="dropdown-btn" id="Bo{}"
@@ -178,7 +178,7 @@ def html_sideNav0(code,filt_df):
         return code
 
     def writeDropdownContent(Bo,Re):
-        if float(Bo) == 0:
+        if Bo == 'Inf':
             Bo = '&infin;'
         code = """
             <a href="#Bo{}_Re{}">Re = {}</a>""".format(Bo,Re,Re)
@@ -215,7 +215,7 @@ def html_sideNav0(code,filt_df):
 def html_main(code,Gamma,eta):
     code += """
     <div class="main clearfix">
-      <h5 class="grid_20">Parameter &Gamma; = {}, &eta; = {}. Sorted by Bo,
+      <h5 class="grid_20">Parameters &Gamma; = {}, &eta; = {}.<br> Sorted by Bo,
       Re, &omega;.</h5>
       <div class="primary grid_24">
         <button class="bodyButton" id="toTopBtn" onclick="topFunction()" title="Go to top"><i class="fa fa-angle-double-up fa-2x"></i></button>
@@ -225,43 +225,60 @@ def html_main(code,Gamma,eta):
 
 
 def build_figname(Bo,Re,Ro,wf,Gamma,eta,mode,pert):
+    if Bo == 'Inf':
+        Bo = '0e0'
     figname = f'Ek_Bo{Bo:s}_Re{Re:s}_Ro{Ro:s}_wf{wf:s}_Gamma{Gamma:s}_eta{eta:s}_mode{mode:s}_pert{pert:s}.png'
     return figname
 
+def format_number(N):
+    N_format = int(float(N)) if float(N).is_integer() else float(N)
+    return str(N_format)
+
 def html_figures(code,filt_df):
     for i in range(filt_df.shape[0]):
-        Bo   = filt_df.iloc[i]['Bo']
-        Re   = filt_df.iloc[i]['Re']
-        Ro   = filt_df.iloc[i]['Ro']
-        wf   = filt_df.iloc[i]['wf']
-        Gamma= filt_df.iloc[i]['Gamma']
-        eta  = filt_df.iloc[i]['eta']
-        mode = filt_df.iloc[i]['mode']
-        pert = filt_df.iloc[i]['pert']
+        Bo_id   = filt_df.iloc[i]['Bo']
+        Re_id   = filt_df.iloc[i]['Re']
+        Ro_id   = filt_df.iloc[i]['Ro']
+        wf_id   = filt_df.iloc[i]['wf']
+        Gamma_id= filt_df.iloc[i]['Gamma']
+        eta_id  = filt_df.iloc[i]['eta']
+        mode_id = filt_df.iloc[i]['mode']
+        pert_id = filt_df.iloc[i]['pert']
 
-        figname = build_figname(Bo,Re,Ro,wf,Gamma,eta,mode,pert)
+        Bo   = format_number(Bo_id)
+        Re   = format_number(Re_id)
+        Ro   = format_number(Ro_id)
+        wf   = format_number(wf_id)
+        Gamma= format_number(Gamma_id)
+        eta  = format_number(eta_id)
+        mode = format_number(mode_id)
+        pert = format_number(pert_id)
 
-        if float(Bo) == 0:
-            Bo = '&infin;'
+        figname = build_figname(Bo_id,Re_id,Ro_id,wf_id,
+                Gamma_id,eta_id,mode_id,pert_id)
+
+        if Bo_id == 'Inf':
+            Bo    = '&infin;'
+            Bo_id = '&infin;'
 
         if float(Ro) == 0:
             if mode == '000' and pert == '000':
                 label='<b id="Bo{}_Re{}">&Gamma; = {} | &eta; = {} | Bo = {} | Re = {} | \
-Ro = {} | &omega;<sub>f</sub> = {} | No Perturbation</b>'.format(Bo,
-                Re,Gamma,eta,Bo,Re,Ro,wf)
+Ro = {} | &omega;<sub>f</sub> = {} | No Perturbation</b>'.format(Bo_id,
+                Re_id,Gamma,eta,Bo,Re,Ro,wf)
             else:
                 label='<b id="Bo{}_Re{}">&Gamma; = {} | &eta; = {} | Bo = {} | Re = {} | \
-Ro = {} | &omega;<sub>f</sub> = {} | mode = {} | pert = {}</b>'.format(Bo,
-                Re,Gamma,eta,Bo,Re,Ro,wf,mode,pert)
+Ro = {} | &omega;<sub>f</sub> = {} | mode = {} | pert = {}</b>'.format(Bo_id,
+                Re_id,Gamma,eta,Bo,Re,Ro,wf,mode,pert)
         else:
             if mode == '000' and pert == '000':
                 label='<b id="Bo{}_Re{}_wf{}">&Gamma; = {} | &eta; = {} | Bo = {} | Re = {} | \
-Ro = {} | &omega;<sub>f</sub> = {} | No Perturbation</b>'.format(Bo,
-                Re,wf,Gamma,eta,Bo,Re,Ro,wf)
+Ro = {} | &omega;<sub>f</sub> = {} | No Perturbation</b>'.format(Bo_id,
+                Re_id,wf_id,Gamma,eta,Bo,Re,Ro,wf)
             else:
                 label='<b id="Bo{}_Re{}_wf{}">&Gamma; = {} | &eta; = {} | Bo = {} | Re = {} | \
-Ro = {} | &omega;<sub>f</sub> = {} | mode = {} | pert = {}</b>'.format(Bo,
-                Re,wf,Gamma,eta,Bo,Re,Ro,wf,mode,pert)
+Ro = {} | &omega;<sub>f</sub> = {} | mode = {} | pert = {}</b>'.format(Bo_id,
+                Re_id,wf_id,Gamma,eta,Bo,Re,Ro,wf,mode,pert)
 
         code += """    <hr>
         <p>
@@ -325,7 +342,7 @@ if __name__=='__main__':
             html = html_sideNav0(html,filt_df)
 #        else:
 #            html_sideNav()
-        html = html_main(html,Gamma,eta)
+        html = html_main(html,format_number(Gamma),format_number(eta))
         html = html_figures(html,filt_df)
         with open(pageName,"w") as f:
           f.write("%s" % html)
