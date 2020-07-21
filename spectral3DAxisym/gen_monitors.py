@@ -1,5 +1,5 @@
-from os import listdir
-from os.path import isfile, join
+from glob import glob
+from os.path import isfile, basename
 import pandas as pd
 
 
@@ -41,10 +41,11 @@ def get_fields(f):
 
 def get_fig_dataframe():
     figpath = 'fig/'
+    prefix  = 'Ek*' # Prefix for time-series of Kinetic Energy
     columns = ['Bo', 'Re', 'Ro', 'wf', 'Gamma', 'eta', 'mode', 'pert']
     order = ['Gamma','eta','Ro','Bo','Re','wf','mode','pert']
 
-    figs = [f for f in listdir(figpath) if isfile(join(figpath, f))]
+    figs = [basename(f) for f in glob(figpath+prefix) if isfile(f)]
     df = pd.DataFrame(columns=columns)
     df_float = pd.DataFrame(columns=columns)
 
