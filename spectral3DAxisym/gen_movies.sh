@@ -40,8 +40,8 @@ html_head(){
   <link rel="stylesheet" href="css/text.css">
   <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="css/monitor.css">
-  <script src="js/jquery-3.4.1.min.js"></script>
-  <script src="js/navigation.js"></script>
+  <script src="../js/jquery-3.4.1.min.js"></script>
+  <script src="../js/navigation.js"></script>
   <title>Movies &alpha; = $alphaValue</title>
 </head>
 __EOF
@@ -102,7 +102,7 @@ code+="""
         </ul>
       </div>
     </div>"""
-  
+
 with open("$out","a+") as f:
   f.write("%s" % code)
   f.close()
@@ -236,7 +236,7 @@ html_main(){
       <h5 class="grid_16">Parameter &alpha; = $alphaValue. Sorted by Bo, Re, &omega;<sub>f</sub>.</h5>
       <div class="primary grid_24">
         <button class="bodyButton" id="toTopBtn" onclick="topFunction()" title="Go to top"><i class="fa fa-angle-double-up fa-2x"></i></button>
-        
+
         <button class="bodyButton" id="opnSideNavBtn" onclick="openNav()"><i class="fa fa-search fa-lg"></i></button>
 __EOF
 }
@@ -333,16 +333,16 @@ do
   echo "Writing Header"
   html_header >> $out
   echo "Writing Menu"
-  html_menu "${alphaList[@]}" "${alphaMovieList[@]}" 
-  echo "Writing sideNav" 
+  html_menu "${alphaList[@]}" "${alphaMovieList[@]}"
+  echo "Writing sideNav"
   if [[ $alpha == '0e0' ]]; then
-    html_sideNav0 ${movies[@]} # This function appends from python 
+    html_sideNav0 ${movies[@]} # This function appends from python
     echo "Zero"
   else
-    html_sideNav ${movies[@]} # This function appends from python 
+    html_sideNav ${movies[@]} # This function appends from python
     echo "Not zero"
   fi
-  
+
   echo "Writing Main"
   html_main $alpha >> $out
   echo "Writing Movies"
@@ -351,7 +351,7 @@ do
   done
   echo "Writin Footer"
   html_footer >> $out
-    
+
   echo "$out DONE"
 done
 

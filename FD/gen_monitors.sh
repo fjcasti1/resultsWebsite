@@ -40,8 +40,8 @@ html_head(){
   <link rel="stylesheet" href="../css/text.css">
   <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="../css/monitor.css">
-  <script src="js/jquery-3.4.1.min.js"></script>
-  <script src="js/navigation.js"></script>
+  <script src="../js/jquery-3.4.1.min.js"></script>
+  <script src="../js/navigation.js"></script>
   <title>Monitor &alpha; = $alphaValue</title>
 </head>
 __EOF
