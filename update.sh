@@ -1,3 +1,7 @@
+###########################
+# Place in home directory #
+###########################
+
 # Update Finite Difference Pages
 #cd public_html/resultsWebsite/knifeEdge2DFD
 #source gen_monitors.sh
